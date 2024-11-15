@@ -20,14 +20,25 @@ public class TokenService {
 
     private final TokenProperties tokenProperties;
 
-    public String generateToken(TokenPayloadDTO user) throws JsonProcessingException {
+    public String generateAccessToken(TokenPayloadDTO tokenPayloadDTO) throws JsonProcessingException {
         Algorithm algorithm = Algorithm.HMAC256(tokenProperties.getSecret());
 
         return JWT.create()
                 .withIssuer(tokenProperties.getIssuer())
-                .withSubject(user.username())
-                .withClaim("payload", new ObjectMapper().writeValueAsString(user))
-                .withExpiresAt(getExpirationDate())
+                .withSubject(tokenPayloadDTO.username())
+                .withClaim("payload", new ObjectMapper().writeValueAsString(tokenPayloadDTO))
+                .withExpiresAt(getExpirationDate(tokenProperties.getExpiration()))
+                .sign(algorithm);
+    }
+
+    public String generateRefreshToken(TokenPayloadDTO tokenPayloadDTO) throws JsonProcessingException {
+        Algorithm algorithm = Algorithm.HMAC256(tokenProperties.getSecret());
+
+        return JWT.create()
+                .withIssuer(tokenProperties.getIssuer())
+                .withSubject(tokenPayloadDTO.username())
+                .withClaim("payload", new ObjectMapper().writeValueAsString(tokenPayloadDTO))
+                .withExpiresAt(getExpirationDate(tokenProperties.getRefreshExpiration()))
                 .sign(algorithm);
     }
 
@@ -53,8 +64,8 @@ public class TokenService {
         return expiration.isBefore(Instant.now().atZone(DateUtils.getZoneOffset()).toInstant());
     }
 
-    private Instant getExpirationDate() {
-        return LocalDateTime.now().plusSeconds(tokenProperties.getExpiration()).toInstant(DateUtils.getZoneOffset());
+    private Instant getExpirationDate(Long expiration) {
+        return LocalDateTime.now().plusSeconds(expiration).toInstant(DateUtils.getZoneOffset());
     }
 
 }

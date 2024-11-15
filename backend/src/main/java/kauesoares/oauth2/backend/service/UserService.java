@@ -16,4 +16,8 @@ public class UserService {
     public Optional<User> findByUsernameAndDeletedIsFalse(String username) {
         return userRepository.findByUsernameAndDeletedIsFalse(username);
     }
+
+    public void save(User user) {
+        userRepository.save(user);
+    }
 }

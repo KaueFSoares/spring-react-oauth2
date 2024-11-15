@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +36,44 @@ public class AuthService {
 
         authenticationManager.authenticate(token);
 
+        UUID refreshCode = UUID.randomUUID();
+
+        user.get().setRefreshCode(refreshCode);
+
+        userService.save(user.get());
+
         return new AuthResDTO(
-                tokenService.generateToken(
+                tokenService.generateAccessToken(
                         new TokenPayloadDTO(user.get())
+                ),
+                tokenService.generateRefreshToken(
+                        new TokenPayloadDTO(user.get(), refreshCode)
                 )
         );
 
+    }
+
+    public AuthResDTO refresh(String refreshToken) throws JsonProcessingException {
+        TokenPayloadDTO tokenPayload = tokenService.parseToken(refreshToken.replace("Bearer ", ""));
+
+        if (tokenPayload.refreshCode() == null)
+            throw new IllegalArgumentException("Invalid token");
+
+        Optional<User> user = userService.findByUsernameAndDeletedIsFalse(tokenPayload.username());
+
+        if (user.isEmpty())
+            throw new UsernameNotFoundException("Invalid credentials");
+
+        if (!user.get().getRefreshCode().equals(tokenPayload.refreshCode()))
+            throw new IllegalArgumentException("Invalid token");
+
+        return new AuthResDTO(
+                tokenService.generateAccessToken(
+                        new TokenPayloadDTO(user.get())
+                ),
+                tokenService.generateRefreshToken(
+                        new TokenPayloadDTO(user.get(), UUID.randomUUID())
+                )
+        );
     }
 }

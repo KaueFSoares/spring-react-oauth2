@@ -8,10 +8,7 @@ import kauesoares.oauth2.backend.dto.res.AuthResDTO;
 import kauesoares.oauth2.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,7 +18,6 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    @PermitAll
     public ResponseEntity<AuthResDTO> login(
             @RequestBody
             @Valid
@@ -31,5 +27,16 @@ public class AuthController {
                 this.authService.login(authReqDTO)
         );
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResDTO> refresh(
+            @RequestHeader("Authorization")
+            String refreshToken
+    ) throws JsonProcessingException {
+        return ResponseEntity.ok(
+                this.authService.refresh(refreshToken)
+        );
+    }
+
 
 }

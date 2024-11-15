@@ -13,6 +13,7 @@ public class TokenProperties {
 
     private String secret;
     private Long expiration;
+    private Long refreshExpiration;
     private String issuer;
 
 }

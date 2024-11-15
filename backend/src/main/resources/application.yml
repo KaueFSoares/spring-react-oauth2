@@ -12,5 +12,6 @@ spring:
 security:
   token:
     expiration: ${JWT_EXPIRATION_SECONDS}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION_SECONDS}
     secret: ${JWT_SECRET}
     issuer: ${JWT_ISSUER}

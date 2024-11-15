@@ -27,11 +27,14 @@ public class TokenFilter extends OncePerRequestFilter {
         if (token != null) {
             TokenPayloadDTO tokenPayload = tokenService.parseToken(token);
 
-            AuthUser authUser = new AuthUser(tokenPayload);
+            // If the token is a refresh token, it will not be authenticated
+            if (tokenPayload.refreshCode() == null) {
+                AuthUser authUser = new AuthUser(tokenPayload);
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(authUser, null, authUser.getAuthorities());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(authUser, null, authUser.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
 
         filterChain.doFilter(request, response);
