@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import kauesoares.oauth2.backend.config.security.AuthUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,6 +30,8 @@ public class TokenFilter extends OncePerRequestFilter {
             AuthUser authUser = new AuthUser(tokenPayload);
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(authUser, null, authUser.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
