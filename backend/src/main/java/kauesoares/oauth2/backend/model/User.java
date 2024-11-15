@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -24,6 +25,8 @@ public class User extends BaseEntity {
     private String username;
 
     private String password;
+
+    private UUID refreshCode;
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Role.class)
     @Enumerated(EnumType.STRING)
