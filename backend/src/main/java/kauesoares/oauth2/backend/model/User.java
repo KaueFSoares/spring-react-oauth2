@@ -28,6 +28,6 @@ public class User extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Role.class)
     @Enumerated(EnumType.STRING)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role_id")
+    @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
 }
