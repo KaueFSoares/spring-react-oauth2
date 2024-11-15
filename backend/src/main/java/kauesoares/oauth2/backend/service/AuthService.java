@@ -6,6 +6,7 @@ import kauesoares.oauth2.backend.config.security.token.TokenService;
 import kauesoares.oauth2.backend.dto.req.AuthReqDTO;
 import kauesoares.oauth2.backend.dto.res.AuthResDTO;
 import kauesoares.oauth2.backend.model.User;
+import kauesoares.oauth2.backend.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -75,5 +76,13 @@ public class AuthService {
                         new TokenPayloadDTO(user.get(), UUID.randomUUID())
                 )
         );
+    }
+
+    public void logout() {
+        User user = this.userService.findByUsernameAndDeletedIsFalse(AuthUtil.getUserName())
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
+
+        user.setRefreshCode(null);
+        this.userService.save(user);
     }
 }

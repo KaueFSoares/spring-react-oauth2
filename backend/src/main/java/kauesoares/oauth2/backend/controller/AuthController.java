@@ -38,5 +38,12 @@ public class AuthController {
         );
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        this.authService.logout();
+
+        return ResponseEntity.ok().build();
+    }
+
 
 }
