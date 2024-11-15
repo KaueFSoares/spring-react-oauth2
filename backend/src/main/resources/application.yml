@@ -8,3 +8,9 @@ spring:
 
       REGULAR_USER_USERNAME: ${REGULAR_USER_USERNAME}
       REGULAR_USER_PASSWORD: ${REGULAR_USER_PASSWORD}
+
+security:
+  token:
+    expiration: ${JWT_EXPIRATION_SECONDS}
+    secret: ${JWT_SECRET}
+    issuer: ${JWT_ISSUER}
