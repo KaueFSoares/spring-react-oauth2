@@ -5,7 +5,7 @@ import java.time.ZoneOffset;
 public class DateUtils {
 
     public static ZoneOffset getZoneOffset() {
-        return ZoneOffset.of("America/Sao_Paulo");
+        return ZoneOffset.of("-03:00");
     }
 
 }
