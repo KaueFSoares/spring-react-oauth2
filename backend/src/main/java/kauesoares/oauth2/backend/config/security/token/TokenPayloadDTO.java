@@ -10,7 +10,7 @@ public record TokenPayloadDTO(
         String username,
         Set<Role> roles
 ) {
-    public static TokenPayloadDTO fromUser(User user) {
-        return new TokenPayloadDTO(user.getId(), user.getUsername(), user.getRoles());
+    public TokenPayloadDTO(User user) {
+        this(user.getId(), user.getUsername(), user.getRoles());
     }
 }
