@@ -2,6 +2,7 @@ package kauesoares.oauth2.backend.config.security.token;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,10 +39,18 @@ public class TokenService {
                 .build()
                 .verify(token);
 
+        if (isTokenExpired(decodedJWT))
+            throw new JWTVerificationException("Token expired");
+
         return new ObjectMapper().readValue(
                 decodedJWT.getClaim("payload").asString(),
                 TokenPayloadDTO.class
         );
+    }
+
+    private boolean isTokenExpired(DecodedJWT decodedJWT) {
+        Instant expiration = decodedJWT.getExpiresAt().toInstant();
+        return expiration.isBefore(Instant.now().atZone(DateUtils.getZoneOffset()).toInstant());
     }
 
     private Instant getExpirationDate() {
