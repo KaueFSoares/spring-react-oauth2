@@ -1,5 +1,6 @@
 package kauesoares.oauth2.backend.config.security;
 
+import kauesoares.oauth2.backend.config.security.token.TokenPayloadDTO;
 import kauesoares.oauth2.backend.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +12,14 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class AuthUser implements UserDetails {
     private final User user;
+
+    public AuthUser(TokenPayloadDTO tokenPayload) {
+        this.user = User.builder()
+                .id(tokenPayload.id())
+                .username(tokenPayload.username())
+                .roles(tokenPayload.roles())
+                .build();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
