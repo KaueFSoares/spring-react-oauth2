@@ -37,21 +37,7 @@ public class AuthService {
 
         authenticationManager.authenticate(token);
 
-        UUID refreshCode = UUID.randomUUID();
-
-        user.get().setRefreshCode(refreshCode);
-
-        userService.save(user.get());
-
-        return new AuthResDTO(
-                tokenService.generateAccessToken(
-                        new TokenPayloadDTO(user.get())
-                ),
-                tokenService.generateRefreshToken(
-                        new TokenPayloadDTO(user.get(), refreshCode)
-                )
-        );
-
+        return generateTokens(user.get());
     }
 
     public AuthResDTO refresh(String refreshToken) throws JsonProcessingException {
@@ -68,14 +54,25 @@ public class AuthService {
         if (!user.get().getRefreshCode().equals(tokenPayload.refreshCode()))
             throw new IllegalArgumentException("Invalid token");
 
-        return new AuthResDTO(
-                tokenService.generateAccessToken(
-                        new TokenPayloadDTO(user.get())
-                ),
-                tokenService.generateRefreshToken(
-                        new TokenPayloadDTO(user.get(), UUID.randomUUID())
-                )
+        return generateTokens(user.get());
+    }
+
+    public AuthResDTO generateTokens(User user) throws JsonProcessingException {
+        UUID refreshCode = UUID.randomUUID();
+
+        user.setRefreshCode(refreshCode);
+
+        userService.save(user);
+
+        String accessToken = tokenService.generateAccessToken(
+                new TokenPayloadDTO(user)
         );
+
+        String refreshToken = tokenService.generateRefreshToken(
+                new TokenPayloadDTO(user, refreshCode)
+        );
+
+        return new AuthResDTO(accessToken, refreshToken);
     }
 
     public void logout() {
