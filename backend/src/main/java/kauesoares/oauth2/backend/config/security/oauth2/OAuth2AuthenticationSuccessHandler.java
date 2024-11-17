@@ -32,7 +32,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         Optional<User> user = userService.findByUsernameAndDeletedIsFalse(oAuth2User.getAttribute("email"));
 
         if (user.isEmpty()) {
-            response.sendRedirect(String.format("http://localhost:5173/success?error=%s", "User not found"));
+            response.sendRedirect(String.format("http://localhost:5173/oauth2/error?message=%s", "User not found"));
             return;
         }
 
@@ -51,6 +51,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             )
         );
 
-        response.sendRedirect(String.format("http://localhost:5173/success?access=%s&refresh=%s", authResDTO.accessToken(), authResDTO.refreshToken()));
+        response.sendRedirect(String.format("http://localhost:5173/oauth2/success?access=%s&refresh=%s", authResDTO.accessToken(), authResDTO.refreshToken()));
     }
 }

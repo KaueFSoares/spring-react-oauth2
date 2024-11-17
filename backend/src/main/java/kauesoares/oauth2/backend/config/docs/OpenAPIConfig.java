@@ -15,7 +15,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenAPIConfig {
 
-    private static final String REDIRECT_URL = "{frontEndUrl}/success?token=TOKEN&refresh=REFRESH&error=ERROR";
+    private static final String SUCCESS_REDIRECT_URL = "{frontEndUrl}/oauth2/success?token=TOKEN&refresh=REFRESH";
+    private static final String ERROR_REDIRECT_URL = "{frontEndUrl}/oauth2/error?message=ERROR";
 
     @Bean
     public OpenApiCustomizer customOpenApi() {
@@ -27,9 +28,12 @@ public class OpenAPIConfig {
             PathItem googleAuthPathItem = new PathItem()
                     .get(new Operation()
                             .summary("Google login")
-                            .description("Endpoint for Google OAuth2 authentication. After successful authentication, the user will be redirected to:\n\n" +
-                                    "`" + REDIRECT_URL + "`\n\n" +
-                                    "Params:\n" +
+                            .description("Endpoint for Google OAuth2 authentication. \n" +
+                                    "- After successful authentication, the user will be redirected to:\n\n" +
+                                    "- - `" + SUCCESS_REDIRECT_URL + "`\n\n" +
+                                    "- After failed authentication, the user will be redirected to:\n\n" +
+                                    "- - `" + ERROR_REDIRECT_URL + "`\n\n" +
+                                    "- Params:\n" +
                                     "- `token`: JWT access token\n\n" +
                                     "- `refresh`: JWT refresh token\n\n" +
                                     "- `error`: Error message")
@@ -42,7 +46,7 @@ public class OpenAPIConfig {
                     .get(new Operation()
                             .summary("GitHub login")
                             .description("Endpoint for GitHub OAuth2 authentication. After successful authentication, the user will be redirected to:\n\n" +
-                                    "`" + REDIRECT_URL + "`\n\n" +
+                                    "`" + SUCCESS_REDIRECT_URL + "`\n\n" +
                                     "Params:\n" +
                                     "- `token`: JWT access token\n\n" +
                                     "- `refresh`: JWT refresh token\n\n" +
