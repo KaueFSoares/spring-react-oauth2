@@ -9,7 +9,6 @@ export const Success = () => {
 
   const accessToken = searchParams.get("access");
   const refreshToken = searchParams.get("refresh");
-  const error = searchParams.get("error");
 
   useEffect(() => {
     if (accessToken) {
@@ -26,14 +25,7 @@ export const Success = () => {
           console.error(error);
         });
     }
-  }, [accessToken]);
-
-  useEffect(() => {
-    if (error) {
-      setMessage(error);
-    }
-  }, [error]);
-  
+  }, [accessToken]);  
 
   return (
     <div>
