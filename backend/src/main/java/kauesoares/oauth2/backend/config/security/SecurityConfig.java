@@ -1,5 +1,6 @@
 package kauesoares.oauth2.backend.config.security;
 
+import kauesoares.oauth2.backend.config.security.oauth2.OAuth2AuthenticationFailureHandler;
 import kauesoares.oauth2.backend.config.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import kauesoares.oauth2.backend.config.security.token.TokenFilter;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final TokenFilter tokenFilter;
+
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
@@ -48,6 +52,7 @@ public class SecurityConfig {
 
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
 
                 .exceptionHandling(exceptionHandling -> exceptionHandling
