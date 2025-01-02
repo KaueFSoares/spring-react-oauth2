@@ -28,11 +28,11 @@ export const Success = () => {
   }, [accessToken]);  
 
   return (
-    <div>
+    <div style={{ textAlign: "center", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100vh", width: "100vw", gap: "1rem" }}>
       <h2>Success</h2>
 
       {message ? (
-        <div>
+        <div style={{maxWidth: "30%", wordBreak: "break-all"}}>
           <p><strong>Message: </strong> {message} </p>
           <p><strong>Access token: </strong> {accessToken} </p>
           <p><strong>Refresh token: </strong> {refreshToken} </p>
